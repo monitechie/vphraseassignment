@@ -6,7 +6,7 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 # install dependancies
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip==21.3.1
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 # copy the rest of the application into the container at /app
