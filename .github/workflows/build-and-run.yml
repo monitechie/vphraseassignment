@@ -1,0 +1,35 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
+      - name: Build and push backend Docker image
+        env:
+          DOCKER_BUILDKIT: 1
+        run: |
+          docker build -t smonicse/backend:latest ./moviesapi
+          docker push smonicse/backend:latest
+
+      - name: Build and push frontend Docker image
+        env:
+          DOCKER_BUILDKIT: 1
+        run: |
+          docker build -t smonicse/frontend:latest ./movies-dashboard
+          docker push smonicse/frontend:latest
+
+      - name: Deploy application using docker-compose
+        run: |
+          docker-compose up -d
